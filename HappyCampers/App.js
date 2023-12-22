@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Button, Text, View, Image } from 'react-native';
 import SplashScreen from './SplashScreen.js';
+import Map from './Map.js';
 
 export default function App() {
   const [renderSplashScreen, setRenderSplashScreen] = useState(true);
@@ -11,17 +12,19 @@ export default function App() {
   }, [])
 
   return (
-    renderSplashScreen ? <SplashScreen /> : (<View style={styles.container}>
+    renderSplashScreen ? <SplashScreen /> : (
+    <View style={styles.container}>
       <View style={styles.button}>
         <Image source={require('./assets/map.jpg')}></Image>
-        <Button title="Search Campsite" />
+        <Text style={styles.cardText}>Search Campsite</Text>
       </View>
       <View style={styles.button}>
         <Image source={require('./assets/tent.jpg')}></Image>
-        <Button title="My Reservations" />
+        <Text style={styles.cardText}>My Reservations</Text>
       </View>
       <StatusBar style="auto" />
-    </View>)
+    </View>
+    )
   );
 }
 
@@ -35,6 +38,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: '3%',
     margin: '4%'
+  },
+  cardText: {
+    color: 'blue',
+    textAlign: 'center',
+    fontSize: 20
   },
   container: {
     flex: 1,
