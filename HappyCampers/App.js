@@ -19,9 +19,9 @@ export default function App() {
   return (
     renderSplashScreen ? <SplashScreen /> : (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Reservations">
+      <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen}/>
-        <Stack.Screen name="Reservations" component={Reservations} options={{title: 'Overview'}}/>
+        <Stack.Screen name="Reservations" component={Reservations} options={{title: 'My Reservations'}}/>
       </Stack.Navigator>
     </NavigationContainer>
     )
