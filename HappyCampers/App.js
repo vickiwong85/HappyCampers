@@ -1,8 +1,11 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Button, Text, View, Image } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from './SplashScreen.js';
 import Map from './Map.js';
+import HomeScreen from './HomeScreen.js';
+import Reservations from './Reservations.js';
 
 export default function App() {
   const [renderSplashScreen, setRenderSplashScreen] = useState(true);
@@ -11,43 +14,16 @@ export default function App() {
     setTimeout(() => setRenderSplashScreen(false), 3000);
   }, [])
 
+  const Stack = createNativeStackNavigator();
+
   return (
     renderSplashScreen ? <SplashScreen /> : (
-    <View style={styles.container}>
-      <View style={styles.button}>
-        <Image source={require('./assets/map.jpg')}></Image>
-        <Text style={styles.cardText}>Search Campsite</Text>
-      </View>
-      <View style={styles.button}>
-        <Image source={require('./assets/tent.jpg')}></Image>
-        <Text style={styles.cardText}>My Reservations</Text>
-      </View>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Reservations">
+        <Stack.Screen name="Home" component={HomeScreen}/>
+        <Stack.Screen name="Reservations" component={Reservations} options={{title: 'Overview'}}/>
+      </Stack.Navigator>
+    </NavigationContainer>
     )
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: 'white',
-    borderColor: 'white',
-    borderRadius: 30,
-    borderWidth: 2,
-    height: 300,
-    justifyContent: 'center',
-    padding: '3%',
-    margin: '4%'
-  },
-  cardText: {
-    color: 'blue',
-    textAlign: 'center',
-    fontSize: 20
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#d22e2e',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

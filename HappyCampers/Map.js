@@ -1,5 +1,5 @@
 import React from 'react';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView from 'react-native-maps';
 import { StyleSheet, View } from 'react-native';
 
 
