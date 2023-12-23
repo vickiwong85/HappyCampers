@@ -1,15 +1,16 @@
+import React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.button}>
-        <Image source={require('./assets/map.jpg')}></Image>
+      <View style={styles.button} onStartShouldSetResponder={() => navigation.navigate('SearchForm')}>
+        <Image source={require('../assets/map.jpg')}></Image>
         <Text style={styles.cardText}>Search Campsite</Text>
       </View>
-      <View style={styles.button}>
-        <Image source={require('./assets/tent.jpg')}></Image>
+      <View style={styles.button} onStartShouldSetResponder={() => navigation.navigate('Reservations')}>
+        <Image source={require('../assets/tent.jpg')}></Image>
         <Text style={styles.cardText}>My Reservations</Text>
       </View>
       <StatusBar style="auto" />
@@ -29,13 +30,13 @@ const styles = StyleSheet.create({
     margin: '4%'
   },
   cardText: {
-    color: 'blue',
+    color: '#1A4314',
     textAlign: 'center',
     fontSize: 20
   },
   container: {
     flex: 1,
-    backgroundColor: '#d22e2e',
+    backgroundColor: '#BACC81',
     alignItems: 'center',
     justifyContent: 'center',
   },

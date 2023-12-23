@@ -2,8 +2,6 @@ import React from 'react';
 import MapView from 'react-native-maps';
 import { StyleSheet, View } from 'react-native';
 
-
-
 const Map = () => {
   return (
     <View style={styles.container}>
@@ -19,7 +17,6 @@ const styles = StyleSheet.create({
   map: {
     width: '50%',
     height: '50%',
-
   }
 });
 
