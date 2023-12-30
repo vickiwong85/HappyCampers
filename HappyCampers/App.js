@@ -39,7 +39,7 @@ export default function App() {
         <Stack.Screen name="Reservations" component={Reservations} options={{title: 'My Reservations'}}/>
         <Stack.Screen name="Reservation Page" component={ReservationPage} options={{title: 'Reservation'}}/>
         <Stack.Screen name="SearchForm" component={SearchForm} options={{title: 'Search'}}/>
-        <Stack.Screen name="Map" component={Map} options={{title: 'Map'}}/>
+        <Stack.Screen name="Map" component={Map} options={{title: 'Map'}} initalParams={{ markers: [] }}/>
       </Stack.Navigator>
     </NavigationContainer>
     )

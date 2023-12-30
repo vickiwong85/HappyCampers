@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { StyleSheet, Text, TextInput, View, Button } from 'react-native';
+import { StyleSheet, Text, Modal, TextInput, View, Button, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 
 const SearchForm = ({ navigation }) => {
   const [text, onChangeText] = useState('');
+  const [markers, setMarkers] = useState([]);
+  const [showErrorMessage, setShowErrorMessage] = useState(false);
 
   function searchRecreationAreas(queryString) {
     console.log(queryString)
@@ -12,13 +14,13 @@ const SearchForm = ({ navigation }) => {
         apikey: process.env.APIKEY,
         accept: 'application/json',
         query: queryString,
-        limit: 2,
+        limit: 5,
         offset: 0,
       }
     })
       .then((result) => {
         console.log(result.data.RECDATA[1].RecAreaID);
-        const recAreaId = result.data.RECDATA[1].RecAreaID
+        const recAreaId = result.data.RECDATA[1].RecAreaID;
         axios.get(`https://ridb.recreation.gov/api/v1/recareas/${recAreaId}/facilities`, {
           params: {
             apikey: process.env.APIKEY,
@@ -36,9 +38,8 @@ const SearchForm = ({ navigation }) => {
               }
             })
               .then((result) => {
-                console.log(result.data.RECDATA[0].ENTITYMEDIA[0].Title);
-                console.log(result.data.RECDATA[0].ENTITYMEDIA[0].URL);
-                axios.get(`https://ridb.recreation.gov/api/v1/facilities/${facilityID}/links`, {
+                result.data.RECDATA.forEach((d) => {
+                  axios.get(`https://ridb.recreation.gov/api/v1/facilities/${facilityID}/links`, {
                   params: {
                     apikey: process.env.APIKEY,
                     facilityID
@@ -46,27 +47,45 @@ const SearchForm = ({ navigation }) => {
                 })
                   .then((result) => {
                     console.log(result.data.RECDATA[0].URL);
+                    setMarkers([{
+                      title: d.ENTITYMEDIA[0].Title,
+                      longitude: d.CampsiteLongitude,
+                      latitude: d.CampsiteLatitude,
+                      latitudeDelta: 0.01,
+                      longitudeDelta: 0.01,
+                      url: result.data.RECDATA[0].URL,
+                      id: d.CampsiteID,
+                    }]);
                   })
                   .catch((err) => {
-                    console.log({err})
+                    console.log({err});
+                    setShowErrorMessage(true);
                   })
+                })
               })
               .catch((err) => {
-                console.log({err})
+                console.log({err});
+                setShowErrorMessage(true);
               })
           })
           .catch((err) => {
-            console.log({err})
+            console.log({err});
+            setShowErrorMessage(true);
           })
       })
       .catch((err) => {
         console.log({err})
+        setShowErrorMessage(true);
       })
   }
 
   function handleSearch() {
     searchRecreationAreas(text);
-    navigation.navigate('Map');
+    if (markers.length) {
+      navigation.navigate('Map', {
+        markers
+      });
+    }
   }
 
   return (
@@ -74,6 +93,23 @@ const SearchForm = ({ navigation }) => {
       <Text style={styles.label}>Search by name of location or area: </Text>
       <TextInput style={styles.input} value={text} onChangeText={onChangeText}/>
       <Button title="Go!" onPress={() => handleSearch()}/>
+      <Modal
+        visible={showErrorMessage}
+        animationType='slide'
+        onRequestClose={() => setShowErrorMessage(false)}
+      transparent={true}
+      >
+        <TouchableOpacity
+        onPressOut={() => setShowErrorMessage(false)}
+        >
+          <TouchableWithoutFeedback>
+            <View style={styles.modal}>
+              <Text>No campsites found.</Text>
+              <Text>Try again!</Text>
+            </View>
+          </TouchableWithoutFeedback>
+        </TouchableOpacity>
+      </Modal>
     </View>
   )
 };
@@ -88,7 +124,24 @@ const styles = StyleSheet.create({
   label : {
     padding: 15,
     fontSize: 15,
-  }
+  },
+  modal: {
+    marginTop: 350,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    height: '30%',
+  },
 });
 
 export default SearchForm;
