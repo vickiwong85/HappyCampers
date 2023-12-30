@@ -22,10 +22,15 @@ const Map = ({ route, navigation }) => {
         initialRegion={initialRegion}
         >
         {markers.map((marker) =>
-          <Marker key={marker.CampsiteID} coordinate={initialRegion}/>
+          <Marker key={marker.CampsiteID} coordinate={{
+            latitude: marker.latitude,
+            longitude: marker.longitude,
+            latitudeDelta: marker.latitudeDelta,
+            longitudeDelta: marker.longitudeDelta,
+          }}/>
         )}
       </MapView>}
-      {/* <Text>Data source: ridb.recreation.gov</Text> */}
+      <Text>Data source: ridb.recreation.gov</Text>
     </View>
   )
 }
